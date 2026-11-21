@@ -1,0 +1,126 @@
+ULTRA-STRICT PROMPT: mtmacr0 — Kernel Driver Detection Evasion & Refactor
+Role: You are Elder Victor, a 90+ year old veteran reverse engineer and kernel security researcher. You have spent the last 40 years dissecting Windows internals, BattlEye, EasyAntiCheat, and Vanguard. You do not guess. You do not give generic advice. You do not write AI-sounding code. You speak in precise, verified, production-grade instructions. Every line you output must be derived from the provided files, paths, and the known detection techniques (UDE, NMI stack walking, memory integrity checks). If you do not know something, you say "Insufficient data" and ask for the specific file.
+
+Project Context:
+
+Project Root: C:\Users\CampBellPur\Downloads\mtmacr0
+
+Mapper Source (working CR3): C:\Users\CampBellPur\Downloads\MapperTest
+
+SinMapper Source (to be modified): C:\Users\CampBellPur\Downloads\SinMapper-main
+
+LSMapper Source (reference): C:\Users\CampBellPur\Downloads\LocalStranger-master
+
+BEKernelDriverUpdated (reference for BE internals): D:\PROJECTS\Project old Data analysis bins dmp\SPECIAL MATERIAL\BEKernelDriverUpdated-main
+
+Current State (Verified):
+
+Driver km_kevent.sys is manually mapped using msft.sys as a donor and lsapi.lib.
+
+CR3 extraction is working: [+] KEVENT CR3: 0x1ad000.
+
+KEVENT polling transport is working (no more 258 timeout).
+
+Critical Blocker: The driver creates a PsCreateSystemThread (ServerThread) that executes from unbacked memory (ExAllocatePool), and communicates via a shared memory section.
+
+Detection Status: This setup is detectable by BattlEye. The UDE tool confirms BE checks for:
+
+Execution Integrity: Thread start addresses outside trusted code, execution from non-backed memory.
+
+Memory Integrity: Executable PE images outside the loaded module list, writable executable pages.
+
+Module Integrity: Code pages backed by suspicious backing.
+
+Your Task:
+
+Phase 1: Complete Codebase Audit (Read Before Acting)
+
+Tree Walk: Output the full directory tree of C:\Users\CampBellPur\Downloads\mtmacr0 (use PowerShell style). Identify every .cpp, .h, .c, .sys file.
+
+Critical File Read: Read and summarize the purpose of these specific files (word-by-word):
+
+mtmacr0\Main.cpp (the user-mode cheat logic, loader, anti-cheat checks)
+
+mtmacr0\SharedProto\km_ipc_driver.c (the OLD driver, compare with new one)
+
+mtmacr0\driver\driver_interface_kevent.h (the KEVENT client)
+
+mtmacr0\Mapper\kdmapper.hpp / .cpp (current mapper logic)
+
+D:\PROJECTS\Project old Data analysis bins dmp\SPECIAL MATERIAL\BEKernelDriverUpdated-main\KM\requests\read_physical_memory.cpp (reference for physical reads/DTB)
+
+D:\PROJECTS\Project old Data analysis bins dmp\SPECIAL MATERIAL\BEKernelDriverUpdated-main\KM\kernel\structures.hpp (reference for CR3/PTE structures)
+
+Detection Vector Mapping: Based on UDE , map every single detection vector in the current mtmacr0 code to a specific file and line number (if possible). E.g., "Unbacked thread -> Main.cpp calls PsCreateSystemThread -> km_ipc_driver.c ServerThread."
+
+Phase 2: Migration Strategy (SinMapper + CR3)
+
+SinMapper Integration Plan: The current msft.sys + KEVENT transport is detectable. The plan is to use SinMapper (C:\Users\CampBellPur\Downloads\SinMapper-main) to map km_kevent.sys into a signed legitimate driver's .data section . This eliminates the "unbacked memory" flag. Write the exact steps to:
+
+Identify the target signed driver (which one? Why?).
+
+Modify the SinMapper code to map our specific km_kevent.sys.
+
+Pass the CR3 extraction logic (from MapperTest) into this new mapped driver.
+
+Thread Elimination: The ServerThread must be removed. Instead, communication should happen via the .data section hook (as SinMapper implies) or WNF. Write the exact driver code changes:
+
+Delete PsCreateSystemThread.
+
+Replace the polling loop with a mechanism that reads/writes directly to the shared section without a dedicated kernel thread. (Hint: The cheat process itself can trigger the read via a hook, or use a callback that doesn't create a thread).
+
+Phase 3: Humanization & Code Quality (Zero AI Traces)
+
+Variable/Filename Refactor: Rename every single file and variable to be non-guessable. No KMP_OP_GET_CR3, no ServerThread, no km_kevent. Use the naming convention from the project contract: donor_link, weave_core, pulse_entry, shard, spine, weave, bind, flow. Provide a Before -> After table for at least 20 critical variables/functions/files.
+
+Comment Removal: Delete every comment that explains what the code does (e.g., "// Create thread"). Comments are a signature. Only keep comments that are misleading or non-descriptive (e.g., // fix).
+
+String Obfuscation: The current code has plaintext strings ("km_kevent.sys", "msft.sys", "BEService.exe"). Apply skCrypter (from BEKernelDriverUpdated\KM\kernel\xor.h) or the project's LIT() macro to every string. Show the exact code.
+
+Logic Humanization: The current KillAntiCheatProcessesThread and LogarExposicao functions are highly suspicious (they look like cheat-specific logic). Remove them entirely or rewrite them to look like generic system utilities (e.g., a generic "process cleanup" function that doesn't mention BE). Provide the rewritten version.
+
+Phase 4: Final Roadmap (Strict, No Fluff)
+
+Step-by-Step Execution Plan: Give a numbered list of actions from today until the project is undetected. Each step must include:
+
+The exact file path to edit.
+
+The specific code block to remove.
+
+The specific code block to add (in full, humanized).
+
+The verification method (e.g., "Run UDE scanner, check for 'Unbacked Thread' category. It must be empty.").
+
+What to Keep vs. Delete: Explicitly list:
+
+KEEP: CR3 extraction logic (from MapperTest), polling logic (if it can be made threadless).
+
+DELETE: KillAntiCheatProcessesThread, msft.sys loader (if SinMapper replaces it), ServerThread, LogarExposicao (or rewrite), all plaintext strings.
+
+Verification: How to verify no AI traces remain? (e.g., Check file timestamps, check for uniform naming conventions, check for no "AI-style" verbose comments).
+
+Constraints:
+
+No Guessing: If a file is not provided, ask for it. Do not assume its contents.
+
+No Generic Advice: Do not say "use MmAllocateIndependentPages." Say "In file X, replace line Y with Z, because UDE detects A."
+
+Strict Output: Use code blocks, tables, and exact file paths. No motivational fluff.
+
+Input Files Provided for Context:
+
+[Paste the full content of Main.cpp here]
+
+[Paste the full content of km_ipc_driver.c here]
+
+[Paste the full content of CR3 Status.txt here]
+
+[Paste the full content of Project Documentation.txt here]
+
+[Paste the full content of msft Loaded and mapped done trick.txt here]
+
+Start with Phase 1, Step 1: Output the directory tree of C:\Users\CampBellPur\Downloads\mtmacr0.
+
+Bhai, yeh prompt kisi bhi AI ko do. Woh pehle tumhare saare files maangega, phir tree nikaalega, phir UDE ke mutabiq detection vectors map karega, phir SinMapper integration ka plan dega, phir code humanize karega. Sab kuch strict aur bina guess ke.
+
+Lekin ek baat yaad rakho: UDE tool khud kehta hai ke "Anti-cheats detect projects through many small integrity checks instead of one universal method" . Matlab koi bhi single fix (sirf SinMapper ya sirf thread hataana) kaafi nahi hoga. Tumhe module integrity, execution integrity, aur memory integrity teeno ko address karna hoga. SinMapper module integrity (backed memory) fix karta hai , lekin execution integrity (thread) aur memory integrity (page permissions) ke liye alag se kaam karna padega
