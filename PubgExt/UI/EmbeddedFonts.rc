@@ -1,0 +1,3 @@
+// Font assets are embedded verbatim; no disk extraction at runtime.
+201 RCDATA "../OS-ImGui/fonts/Inter-Medium.ttf"
+202 RCDATA "../OS-ImGui/fonts/Inter-SemiBold.ttf"

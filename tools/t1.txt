@@ -1,0 +1,2 @@
+literal idx: 16896
+amp count: 79

@@ -1,0 +1,89 @@
+# Build outputs
+Build/
+driver_stub/Build/
+tools/cert_probe/Build/
+
+# Objetos e binarios de compilacao manual
+*.obj
+*.pdb
+*.ilk
+*.iobj
+*.ipdb
+*.idb
+*.exp
+*.lib
+*.exe
+*.sys
+*.tlog/
+*.lastbuildstate
+*.unsuccessfulbuild
+
+# Excecoes: coisas vendorizadas que PRECISAM ser versionadas
+!Build/Release/PubgExt/kdmapper.exe
+
+# Secrets — NUNCA versionados
+secrets/
+*.pfx
+*.cer
+
+# Ferramentas de terceiros baixadas (instaladores, dumps)
+_tools/
+
+# Amostras de driver copiadas para analise
+_samples/
+
+# Python
+__pycache__/
+*.pyc
+
+# Saidas das ferramentas de analise
+tools/dump_driver/out/
+tools/smoke/out/
+
+# Artefatos antigos movidos da raiz
+_legacy/
+
+# VS artifacts
+.vs/
+*.user
+*.suo
+
+# Logs
+logs.txt
+Build/logs/
+*.log
+
+# ---------------------------------------------------------------------------
+# QUARENTENA DA LIMPEZA
+#
+# 102 MB de experimento/backup/dump movidos pra ca' na organizacao do projeto.
+# Nada aqui e' build nem runtime — foi verificado recompilando do zero depois
+# da limpeza. Pode apagar a pasta inteira.
+# ---------------------------------------------------------------------------
+_lixo/
+
+# Intermediarios de build (regenerados por tools\build_all.ps1)
+Build/obj/
+Build/logs/
+
+# ---------------------------------------------------------------------------
+# AUDIT ADDITIONS - humanization traces (delete in Phase 3)
+# ---------------------------------------------------------------------------
+*.bak
+*.bak_*
+*.backup
+*.bak_careful
+*.bak_lang_careful
+
+# Larger vendored dependency (500+ files, not needed)
+third_party/freetype-VER-2-13-3/
+
+# Safer exclusions
+*.pch
+*.ipch
+*.suo
+
+# Keep lsapi.lib (needed for driver link)
+!MapperTest/MapperTest/lsapi.lib
+!MapperTest/MapperTest/lsapi.h
+... (upar wala content) ...

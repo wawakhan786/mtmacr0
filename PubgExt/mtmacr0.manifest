@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- =====================================================================
+     Manifest de elevacao (hardening-p3)
+
+     POR QUE requireAdministrator (e nao asInvoker):
+       - o mapper faz MmFreeIndependentPages / MmSetPageProtection por uma
+         call gadget de kernel: sem SeDebugPrivilege ativo no momento da
+         chamada as operacoes falham ou, pior, falham em meia sequencia;
+       - o loader do BYOVD (NtLoadDriver) precisa da mesma privilegiacao;
+       - o WH_MOUSE_LL/WH_KEYBOARD_LL funciona sem admin, mas o resto do app
+         ja' NAO funciona — pedir elevacao "so para talvez ajudar" era a
+         alternativa, e ela custa o mesmo prompt. Elevado sempre e' menos
+         misterioso que elevado "nao se sabe quando".
+
+     O prompt de UAC e o unico ponto em que o app pede permissao visivel.
+     Ele ja' acontecia em tempo de carga (SeDebugPrivilege falha em silencio
+     para processo nao elevado); agora e' explicito e uma unica vez.
+     ===================================================================== -->
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <requestedExecutionLevel level="requireAdministrator" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Win10 / Win11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+      <!-- Win8.1 -->
+      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>
+    </application>
+  </compatibility>
+</assembly>

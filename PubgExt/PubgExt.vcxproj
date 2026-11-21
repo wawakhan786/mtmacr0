@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{8cba9e6c-73a9-49d7-aafd-ad74ff639cad}</ProjectGuid>
+    <RootNamespace>PubgExt</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PubgExt</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--
+    =======================================================================
+    SELECAO DO PLATFORM TOOLSET — em UM lugar so'.
+    =======================================================================
+
+    O QUE ESTAVA ERRADO (bug real, custou um build quebrado):
+
+        <PlatformToolset Condition="... !Exists('...\v143\Microsoft.Cpp.$(Platform).v143.props')">v145</PlatformToolset>
+
+    Esse arquivo NAO EXISTE no VS 2022 atual. A pasta do toolset
+    (`...\PlatformToolsets\v143\`) tem, desde o 17.14:
+
+        Toolset.props
+        Toolset.targets
+
+    e nao mais `Microsoft.Cpp.x64.v143.props`. O `Exists()` dava falso
+    SEMPRE, o projeto caia para o v145 (VS 2026) e o build morria com
+    MSB8020 — mesmo com o v143 instalado e funcionando. O sintoma mentia:
+    parecia toolset ausente, era nome de arquivo velho.
+
+    A correcao tem dois cuidados:
+
+      1. testa as DUAS grafias (`Toolset.props` e a antiga), porque a
+         maquina pode ter VS 17.0-17.13 ou 17.14+;
+      2. TODAS as condicoes exigem `'$(PlatformToolset)'==''`, entao um
+         `-p:PlatformToolset=...` na linha de comando continua ganhando.
+         A ordem importa: cada linha so' age se as anteriores nao agiram.
+
+    O fallback final e' v143 sem condicao. Se nenhum dos dois existir, o
+    MSB8020 aparece com a mensagem certa ("instale o v143"), em vez de
+    pedir o v145 do nada.
+    =======================================================================
+  -->
+  <PropertyGroup Label="ToolsetSelection">
+    <VcToolsetsDir>$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets</VcToolsetsDir>
+    <PlatformToolset Condition="'$(PlatformToolset)'=='' and Exists('$(VcToolsetsDir)\v143\Toolset.props')">v143</PlatformToolset>
+    <PlatformToolset Condition="'$(PlatformToolset)'=='' and Exists('$(VcToolsetsDir)\v143\Microsoft.Cpp.$(Platform).v143.props')">v143</PlatformToolset>
+    <PlatformToolset Condition="'$(PlatformToolset)'=='' and Exists('$(VcToolsetsDir)\v145\Toolset.props')">v145</PlatformToolset>
+    <PlatformToolset Condition="'$(PlatformToolset)'=='' and Exists('$(VcToolsetsDir)\v145\Microsoft.Cpp.$(Platform).v145.props')">v145</PlatformToolset>
+    <PlatformToolset Condition="'$(PlatformToolset)'==''">v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Build\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir>$(SolutionDir)Build/obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <!-- nome do .exe (o PROJETO continua PubgExt / -Target RuntimeBroker) -->
+    <TargetName>mtmacr0</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)Build\$(Configuration)\$(ProjectName)</OutDir>
+    <IntDir>$(SolutionDir)Build/obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <!-- nome do .exe (o PROJETO continua PubgExt / -Target RuntimeBroker) -->
+    <TargetName>mtmacr0</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\Config;$(SolutionDir)$(ProjectName)\Esp;$(SolutionDir)$(ProjectName)\OS-ImGui;$(SolutionDir)$(ProjectName)\OS-ImGui\imgui;$(SolutionDir)$(ProjectName)\OS-ImGui\stb;$(SolutionDir)$(ProjectName)\Security;$(SolutionDir)$(ProjectName)\SDK;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Memory;$(SolutionDir)$(ProjectName)\;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\ESP;$(SolutionDir)$(ProjectName)\json</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <!-- UAC (hardening-p3): o mapper e o loader de doador precisam de
+           SeDebugPrivilege no momento exato da chamada; requireAdministrator
+           faz o prompt uma unica vez em vez de falhar silicioso. O manifest
+           e gerado/embutido pelo proprio link (/manifest:embed) — nao colocar
+           "1 24" tambem no .rc ou da CVT1100 (recurso duplicado). -->
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <UACUIAccess>false</UACUIAccess>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <!-- /EHa: __try/__except precisa disto para pegar excecao de
+           instrucao privilegiada. __readcr3() em modo usuario levanta
+           0xC0000096, e sem SEH o processo morre. Ver DriverlessProbe.cpp. -->
+      <ExceptionHandling>Async</ExceptionHandling>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)$(ProjectName)\Config;$(SolutionDir)$(ProjectName)\Esp;$(SolutionDir)$(ProjectName)\OS-ImGui;$(SolutionDir)$(ProjectName)\OS-ImGui\imgui;$(SolutionDir)$(ProjectName)\OS-ImGui\stb;$(SolutionDir)$(ProjectName)\Security;$(SolutionDir)$(ProjectName)\SDK;$(SolutionDir)$(ProjectName)\Misc\Pch;$(SolutionDir)$(ProjectName)\Memory;$(SolutionDir)$(ProjectName)\;$(SolutionDir)$(ProjectName)\Misc;$(SolutionDir)$(ProjectName)\ESP;$(SolutionDir)$(ProjectName)\json</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <!-- ver o bloco UAC do Debug|x64 acima: manifest via /MANIFESTUAC -->
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
+      <UACUIAccess>false</UACUIAccess>
+      <AdditionalOptions>/PDBALTPATH:%%_PDB%% %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+ 
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Config\ConfigUtilities.cpp" />
+    <ClCompile Include="ESP\PlayerEsp.cpp" />
+    <ClCompile Include="ESP\Radar.cpp" />
+    <ClCompile Include="OS-ImGui\OS-ImGui.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\OS-ImGui_Base.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\OS-ImGui_External.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\imgui\imgui.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\imgui\imgui_draw.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\imgui\imgui_impl_dx11.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\imgui\imgui_impl_win32.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\imgui\imgui_tables.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="OS-ImGui\imgui\imgui_widgets.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="..\third_party\imgui_freetype\imgui_freetype.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="AntiCheat.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="DriverSelfTest.cpp" />
+    <ClCompile Include="DriverlessProbe.cpp" />
+    <ClCompile Include="Memory\Memory.cpp" />
+    <ClCompile Include="Misc\CheatFunction.cpp" />
+    <ClCompile Include="Misc\Pch\Pch.cpp" />
+    <ClCompile Include="Misc\Vector.cpp" />
+    <ClCompile Include="SDK\Camera.cpp" />
+    <ClCompile Include="SDK\Engine.cpp" />
+    <ClCompile Include="SDK\ActorEntity.cpp" />
+    <ClCompile Include="driver\driver_interface_v3.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="SDK\Aimbot.cpp" />
+    <ClCompile Include="Mapper\intel_driver.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Mapper\kdmapper.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Mapper\portable_executable.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Mapper\service.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Mapper\utils.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="Mapper\KDSymbolsHandler.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Config\ConfigInstance.h" />
+    <ClInclude Include="Config\ConfigUtilities.h" />
+    <ClInclude Include="Config\MenuVariant.h" />
+    <ClInclude Include="Config\Lang.h" />
+    <ClInclude Include="Config\Overlay.h" />
+    <ClInclude Include="Config\PlayerConfig.h" />
+    <ClInclude Include="ESP\PlayerEsp.h" />
+    <ClInclude Include="ESP\EspLayout.h" />
+    <ClInclude Include="ESP\Radar.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="UI\EspTypography.h" />
+    <ClInclude Include="UI\EmbeddedFonts.h" />
+    <ClInclude Include="AntiCheat.h" />
+    <ClInclude Include="OS-ImGui\OS-ImGui.h" />
+    <ClInclude Include="OS-ImGui\OS-ImGui_Base.h" />
+    <ClInclude Include="OS-ImGui\OS-ImGui_External.h" />
+    <ClInclude Include="OS-ImGui\OS-ImGui_Struct.h" />
+    <ClInclude Include="Misc\CheatFunction.h" />
+    <ClInclude Include="Memory\Memory.h" />
+    <ClInclude Include="Misc\Pch\Pch.h" />
+    <ClInclude Include="Misc\Vector.h" />
+    <ClInclude Include="SDK\Camera.h" />
+    <ClInclude Include="SDK\Engine.h" />
+    <ClInclude Include="SDK\ActorEntity.h" />
+    <ClInclude Include="SDK\EngineStructs.h" />
+    <ClInclude Include="Security\XorStr.h" />
+    <ClInclude Include="driver\driver_interface_v3.h" />
+    <ClInclude Include="driver\AsIO3_Client.h" />
+    <ClInclude Include="driver\common.h" />
+    <ClInclude Include="SDK\Aimbot.h" />
+    <ClInclude Include="SDK\RcsNoise.h" />
+    <ClInclude Include="Config\AimbotConfig.h" />
+    <ClInclude Include="driver\syscall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="driver\syscall.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+    <ResourceCompile Include="UI\EmbeddedFonts.rc" />
+  </ItemGroup>
+  <!-- Dependencias do transplante do modulo ESP (freetype + Inter embutida) -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)third_party\freetype-VER-2-13-3\include;$(SolutionDir)third_party\imgui_freetype;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link><AdditionalDependencies>$(SolutionDir)Build\freetype\$(Configuration)\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+  </ItemDefinitionGroup>
+  <Target Name="PrepareTypographyDependencies" BeforeTargets="PrepareForBuild" Condition="'$(Platform)'=='x64'">
+    <Exec Command="cmake -S &quot;$(SolutionDir)third_party\freetype-VER-2-13-3&quot; -B &quot;$(SolutionDir)Build\freetype&quot; -G &quot;Visual Studio 17 2022&quot; -A x64 -DBUILD_SHARED_LIBS=OFF -DFT_DISABLE_ZLIB=ON -DFT_DISABLE_BZIP2=ON -DFT_DISABLE_PNG=ON -DFT_DISABLE_HARFBUZZ=ON -DFT_DISABLE_BROTLI=ON" />
+    <Exec Command="cmake --build &quot;$(SolutionDir)Build\freetype&quot; --config $(Configuration) --parallel" />
+  </Target>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+  </ImportGroup>
+</Project>

@@ -1,0 +1,142 @@
+Microsoft (R) COFF/PE Dumper Version 14.44.35228.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file C:\Windows\System32\drivers\kbdhid.sys
+
+File Type: EXECUTABLE IMAGE
+
+  Section contains the following imports:
+
+    ntoskrnl.exe
+             14000C090 Import Address Table
+             14000C578 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                         A38 RtlUnregisterFeatureConfigurationChangeNotification
+                         417 IoSetCompletionRoutineEx
+                         9E1 RtlRecordFeatureUsage
+                         378 IoFreeMdl
+                         60B MmGetSystemRoutineAddress
+                         475 IofCallDriver
+                          FC ExFreePoolWithTag
+                         468 IoWMIRegistrationControl
+                         476 IofCompleteRequest
+                         5B5 KeWaitForSingleObject
+                         313 IoAllocateErrorLogEntry
+                         B6D ZwClose
+                         4C0 KeDelayExecutionThread
+                         319 IoAllocateWorkItem
+                         49D KeAcquireSpinLockRaiseToDpc
+                         3F9 IoReleaseRemoveLockAndWaitEx
+                         327 IoCancelIrp
+                         4F0 KeInitializeDpc
+                         360 IoDetachDevice
+                         70B PoCallDriver
+                         375 IoFreeIrp
+                         4FC KeInitializeSpinLock
+                         3CF IoOpenDeviceRegistryKey
+                         35D IoDeleteDevice
+                         3B9 IoInitializeRemoveLockEx
+                         4FE KeInitializeTimer
+                         322 IoBuildDeviceIoControlRequest
+                         757 PoSetPowerState
+                         31E IoAttachDeviceToDeviceStack
+                         563 KeReleaseSpinLock
+                         583 KeSetEvent
+                         4B0 KeCancelTimer
+                         314 IoAllocateIrp
+                         37B IoFreeWorkItem
+                         343 IoCreateDevice
+                         C02 ZwQueryValueKey
+                         4F4 KeInitializeEvent
+                         760 PoStartNextPowerIrp
+                         C54 __C_specific_handler
+                         480 KdDebuggerEnabled
+                         4AF KeBugCheckEx
+                         5AF KeTryToAcquireSpinLockAtDpcLevel
+                         595 KeSetTimerEx
+                          73 DbgBreakPointWithStatus
+                         48D KdRefreshDebuggerNotPresent
+                         51A KeLowerIrql
+                         413 IoReuseIrp
+                         565 KeReleaseSpinLockFromDpcLevel
+                         5B7 KfRaiseIrql
+                         3DF IoQueueWorkItem
+                          76 DbgPrint
+                         574 KeResetEvent
+                         8CB RtlEqualUnicodeString
+                         14C ExReleaseFastMutex
+                          AF ExAcquireFastMutex
+                         4D9 KeFlushQueuedDpcs
+                         B9C ZwEnumerateValueKey
+                         BC2 ZwOpenKey
+                         A39 RtlUnregisterFeatureUsageProvider
+                          CB ExAllocatePool2
+                         9C6 RtlQueryFeatureConfigurationChangeStamp
+                         9D2 RtlQueryRegistryValues
+                         3D0 IoOpenDriverRegistryKey
+                         93D RtlInitUnicodeString
+                         316 IoAllocateMdl
+                         5EC MmBuildMdlForNonPagedPool
+                         861 RtlArmFeatureUsageProviderFlushNotification
+                         85A RtlAppendUnicodeToString
+                         46F IoWriteErrorLogEntry
+                         9C5 RtlQueryFeatureConfiguration
+                         4E0 KeGetCurrentIrql
+                         9E2 RtlRegisterFeatureConfigurationChangeNotification
+                         3FA IoReleaseRemoveLockEx
+                         30B IoAcquireRemoveLockEx
+                          A6 EtwWriteTransfer
+                         9E3 RtlRegisterFeatureUsageProvider
+
+    WMILIB.SYS
+             14000C050 Import Address Table
+             14000C538 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                           4 WmiSystemControl
+                           2 WmiCompleteRequest
+
+    HIDPARSE.SYS
+             14000C000 Import Address Table
+             14000C4E8 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          1E HidP_TranslateUsageAndPagesToI8042ScanCodes
+                           5 HidP_GetCaps
+                          1B HidP_SetUsages
+                          15 HidP_MaxUsageListLength
+                           E HidP_GetUsageValue
+                          12 HidP_GetValueCaps
+                          21 HidP_UsageAndPageListDifference
+                          11 HidP_GetUsagesEx
+                          20 HidP_UnsetUsages
+
+    WppRecorder.sys
+             14000C068 Import Address Table
+             14000C550 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          10 imp_WppRecorderReplay
+                           4 WppAutoLogTrace
+                           2 WppAutoLogStart
+                           3 WppAutoLogStop
+
+  Summary
+
+        1000 .data
+        2000 .idata
+        1000 .pdata
+        1000 .rdata
+        1000 .reloc
+        1000 .rsrc
+        7000 .text
+        1000 GFIDS
+        1000 INIT
+        2000 PAGE
+        1000 fothk
